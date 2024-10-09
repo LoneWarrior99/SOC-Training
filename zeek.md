@@ -1,5 +1,9 @@
 This was a writeup tryhackme's zeek modules.
 
+The official description; "Zeek (formerly Bro) is the world's leading platform for network security monitoring. Flexible, open-source, and powered by defenders." "Zeek is a passive, open-source network traffic analyser. Many operators use Zeek as a network security monitor (NSM) to support suspicious or malicious activity investigations. Zeek also supports a wide range of traffic analysis tasks beyond the security domain, including performance measurement and troubleshooting."
+
+---
+
 An alert triggered: "Anomalous DNS Activity".
 The case was assigned to you. Inspect the PCAPand retrieve the artefacts to confirm this alert is a true positive. 
 
