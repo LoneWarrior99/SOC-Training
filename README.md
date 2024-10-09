@@ -1,5 +1,8 @@
 # TryHackMe SOC Level 1
 
+![Certification](https://github.com/user-attachments/assets/0cd8bc1d-222c-4736-8738-1230a045d228)
+
+
 Objectives:
 ---
 - Network Traffic Analysis
