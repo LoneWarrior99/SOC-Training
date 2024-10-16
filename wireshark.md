@@ -1,7 +1,7 @@
 
 Wireshark is an open-source, cross-platform network packet analyzer tool capable of sniffing and investigating live traffic and inspecting packet captures (PCAP).
 
-This a walkthrough of THM's Wireshark Triology.
+This a walkthrough of THM's Wireshark Basic and Packet Operation. This covers how to use wireshark and how to do packet level searches.
 
 ---
 
@@ -334,11 +334,6 @@ This room will cover the advanced features of the Wireshark by focusing on packe
 
 ![image](https://github.com/user-attachments/assets/fff832aa-c04e-4513-a63d-f64b5a189e89)
 
-
-
-
----
-# Wireshark: Traffic Analysis
 
 
 
