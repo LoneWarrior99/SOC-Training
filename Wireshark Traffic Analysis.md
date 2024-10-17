@@ -95,6 +95,58 @@ Then look at the info for our answer.
 ![image](https://github.com/user-attachments/assets/c0d9a7cd-e1ce-4052-8ad3-09db02c0072a)
 
       
-## ARP Poisoning & Man in the Middle
+## ARP Poisoning / Spoofing (MITM)
 
-This section detects arp.
+This section discusses Address Resolution Protocol Poisoning which is a type of attack that involves network jamming/manipulating by sending malicious ARP packets to the default gateway. The aim is to manipulate the "IP to MAC address table" and sniff the traffic of the target host.
+
+It is easy to detect when knowing the ARP protocol workflow and since the attack is static. 
+
+            Arp Analysis
+            - Works on local network
+            - Enables the communication between MAC addresses
+            - Not secure protocol
+            - Not routable protocol
+            - No authentication function
+            - Common patterns are request and response, announcement and gratuitious packets.
+
+
+Let's review some legitimate and suspicious ARP Packets: 
+
+Wireshark Filter: 
+
+![image](https://github.com/user-attachments/assets/fb25b561-1a06-4909-9e45-65806b9bd437)
+
+ARP Request:
+
+
+ARP Reply:
+
+
+### What is the number of ARP requests crafted by the attacker?
+
+
+### What is the number of HTTP packets received by the attacker?
+
+
+### What is the number of sniffed username&password entries?
+
+
+### What is the password of the "Client986"?
+
+
+### What is the comment provided by the "Client354"?
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
