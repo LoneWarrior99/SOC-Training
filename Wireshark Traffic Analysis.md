@@ -279,7 +279,7 @@ DNS Analysis:
       
 ![image](https://github.com/user-attachments/assets/4eb12ed3-3df8-44b3-9ec5-c04859ef283d)
 
-## Investigate the anomalous packets. Which protocol is used in ICMP tunnelling?
+### Investigate the anomalous packets. Which protocol is used in ICMP tunnelling?
 
 We will create a filter to check for C2 tunnelling activities:
 
@@ -290,7 +290,7 @@ Reviewing each packet we see some keywords like diffie-hellman, sha256, ssh, aes
 ![image](https://github.com/user-attachments/assets/388352ff-231d-41a5-b7f2-bba199190956)
 
 
-## Investigate the anomalous packets. What is the suspicious main domain address that receives anomalous DNS queries? (Enter the address in defanged format.)
+### Investigate the anomalous packets. What is the suspicious main domain address that receives anomalous DNS queries? (Enter the address in defanged format.)
 
 Really had to dig for this one, used the filter they gave us and manually inspected each packet and found data exfil site in the packet data.
 
