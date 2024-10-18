@@ -400,5 +400,79 @@ So we will take what we found from the last question and decode it in CyberChef:
 
 ## Encrypted Protocol Analysis: Decrypting HTTPS
 
+      - Enhanced security against spoofing, sniffing, and intercepting
+      - Uses TLS protocol to encrypt communications
+      - Impossible to decrypt without having key pairs
+
+![image](https://github.com/user-attachments/assets/ae8f04cb-cb10-4da4-9c5e-b2415f232909)
+
+TLS Protocol also has a handshake process, Client and Server Hello. Here are helpful filters to spot involved IP addresses:
+
+      - Client Hello: (http.request or tls.handshake.type == 1) and !(ssdp) 
+      - Server Hello: (http.request or tls.handshake.type == 2) and !(ssdp)  
 
 
+"An encryption key log file is a text file that contains unique key pairs to decrypt the encrypted traffic session. These key pairs are automatically created (per session) when a connection is established with an SSL/TLS-enabled webpage. As these processes are all accomplished in the browser, you need to configure your system and use a suitable browser (Chrome and Firefox support this) to save these values as a key log file. To do this, you will need to set up an environment variable and create the SSLKEYLOGFILE, and the browser will dump the keys to this file as you browse the web. SSL/TLS key pairs are created per session at the connection time, so it is important to dump the keys during the traffic capture. Otherwise, it is not possible to create/generate a suitable key log file to decrypt captured traffic"
+
+We will add the key log files now with "Edit > Preferences > Protocols > TLS" and browse for the provided file.
+
+Decompressed header info and HTTP2 packet details are available after decrypting the traffic. Depending on the packet details, you can also have the following data formats:
+
+    Frame
+    Decrypted TLS
+    Decompressed Header
+    Reassembled TCP
+    Reassembled SSL
+
+### What is the frame number of the "Client Hello" message sent to "accounts.google.com"?
+
+Use this to view Client Hello:
+
+      (http.request or tls.handshake.type == 1) and !(ssdp)
+            
+Search for accounts.google in the bytes panel.
+
+![image](https://github.com/user-attachments/assets/2a23961f-07b3-4fa8-8844-fd383394a135)
+
+
+### Decrypt the traffic with the "KeysLogFile.txt" file. What is the number of HTTP2 packets?
+
+Aleady added the key log file, just filter for http2 for answer.
+
+![image](https://github.com/user-attachments/assets/c9c4d561-0ff8-487d-bdc7-17c939b7fe6f)
+
+
+### Go to Frame 322. What is the authority header of the HTTP2 packet? (Enter the address in defanged format.)
+
+Look through the panel, HTTP2 > Stream > Header > authority
+
+![image](https://github.com/user-attachments/assets/be42d732-0fee-4489-9f51-43a2c344c137)
+
+
+### Investigate the decrypted packets and find the flag! What is the flag?
+
+They hint said "you can export objects after decryping the traffic". Went to export httb object, then saved it onto the desktop. Opened the file to reveal the answer. This was very cool.
+
+![image](https://github.com/user-attachments/assets/d55018ec-53ae-44e0-8439-7c32e817a757)
+
+![image](https://github.com/user-attachments/assets/fe715296-0730-4b03-80d3-ddebbc170761)
+
+
+## BONUS
+
+Cleartext Credentials:
+
+"Some Wireshark dissectors (FTP, HTTP, IMAP, pop and SMTP) are programmed to extract cleartext passwords from the capture file. You can view detected credentials using the "Tools --> Credentials" menu. This feature works only after specific versions of Wireshark (v3.1 and later). Since the feature works only with particular protocols, it is suggested to have manual checks and not entirely rely on this feature to decide if there is a cleartext credential in the traffic"
+
+Actionable Results: 
+
+"You can create firewall rules by using the "Tools --> Firewall ACL Rules" menu. Once you use this feature, it will open a new window and provide a combination of rules (IP, port and MAC address-based) for different purposes. Note that these rules are generated for implementation on an outside firewall interface."
+
+Currently, Wireshark can create rules for:
+
+    Netfilter (iptables)
+    Cisco IOS (standard/extended)
+    IP Filter (ipfilter)
+    IPFirewall (ipfw)
+    Packet filter (pf)
+    Windows Firewall (netsh new/old format)
