@@ -65,9 +65,58 @@ All event logs are present in index=botsv1
 
       
 
-#### Reconnaissance Phase
+### Reconnaissance Phase
 
+Start our analysis by searching for any reconnaissance attempt against our web server (imreallnotbatman.com).
+
+      Search Query: index=botsv1 imreallynotbatman.com
+
+First task is to identify the possible source IP address. We will use http as our sourcetype.
+
+![image](https://github.com/user-attachments/assets/cbcaa985-9457-4a85-952c-37b5ab5679b0)
+
+40.80.148.42 looks interesting, we can view the fields such as User-Agent, Post request, URIs, etc., to view the traffic more. We can see some traces of it being probed 
+
+![image](https://github.com/user-attachments/assets/377f9859-e7b2-4cc3-a99f-a366350db4a6)
+
+![image](https://github.com/user-attachments/assets/325e5536-da0c-47ab-b022-0881256cdf29)
+
+Lets validate if thats the right IP scanning, by filtering deeper into the suricata logs.
+
+Looking at the alert filter shows us what we need to know.
+
+![image](https://github.com/user-attachments/assets/ac6ca4b5-4b55-4998-bf48-92751f18dc06)
+
+Questions:
+
+#### One suricata alert highlighted the CVE value associated with the attack attempt. What is the CVE value?
+
+Using the filter we had earlier we can search for alert and look for this value.
+
+![image](https://github.com/user-attachments/assets/99fc84a4-ebd7-490d-bee5-482543b405dd)
+
+
+#### What is the CMS our web server is using?
+
+We can find the content management system with http.url which shows us it in the value, joomla.
+
+![image](https://github.com/user-attachments/assets/7a0c74aa-7e36-42f9-afd1-90b5cdef64df)
+
+
+
+#### What is the web scanner, the attacker used to perform the scanning attempts?
+
+Look at the user agent field and we can find a popular scanner at the bottom, acunetix.
+
+![image](https://github.com/user-attachments/assets/c41141e8-eab0-469d-a565-116933ab8584)
+
+
+#### What is the IP address of the server imreallynotbatman.com?
     
+Our web server is being scanned so we can look at the destination ip field, 192.168.250.70.
+
+![image](https://github.com/user-attachments/assets/4b565667-dc33-4f6f-ad9e-c11712cb0c2d)
+
 
 
 
