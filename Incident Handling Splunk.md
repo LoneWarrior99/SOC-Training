@@ -161,24 +161,115 @@ Lets add this filter to look for important fields:
 
 ![image](https://github.com/user-attachments/assets/6084d94d-54dd-40e9-b204-e22f9693c8a2)
 
+Looking at the results we can see logins with the username, "admin", and several passwords attempts from the IP 23.22.63.114. The time between events also tells us a tool was most likely used to brute force this account.
+
+Lets use Regex to extract all the password values found:
+
+      index="botsv1" sourcetype=stream:http dest_ip="192.168.250.70" http_method=POST form_data=*username*passwd*
+      | rex field=form_data "passwd=(?<creds>\w+)" 
+      | table src_ip uri creds
+
+
+![image](https://github.com/user-attachments/assets/0628856f-4fe2-4812-9b36-943c8c30cf64)
+
+If we go back we can look at the fields http_user_agent and see that python was used automate the brute force attack.
+
+![image](https://github.com/user-attachments/assets/30edd644-ff87-4ad6-ac95-8d85bc134e5f)
+
+Adding http_user_agent to our filter we can see the continuous brute force attempts from 23.22.63.114  and 1 password attempt from 40.80.148.42 with the creds "batman".
+
+
+![image](https://github.com/user-attachments/assets/002509a6-5ba9-41f3-ae35-97fa1654bdca)
 
 
 
 #### What was the URI which got multiple brute force attempts?
+We can see this with our last images or like in the uri field.
 
+- /joomla/administrator/index.php
 
 #### Against which username was the brute force attempt made?
+Looking at the form data will show us.
 
+- admin      
 
 #### What was the correct password for admin access to the content management system running imreallynotbatman.com?
+40.80.148.42 showed 1 attempt with a different http_user_agent.
+
+- batman
 
 
 #### How many unique passwords were attempted in the brute force attempt?
+The statistics can show us this, assuming python cracked the password and the attacker logged on in with it, we can subtract 1 from the total to give us the answer
 
+- 412
+
+  ![image](https://github.com/user-attachments/assets/6e0a782c-db09-4968-b87d-77a288cd6f60)
+ 
 
 #### What IP address is likely attempting a brute force password attack against imreallynotbatman.com?
+We caught this looking multiple brute force attempt.
+
+- 23.22.63.114
 
 
 #### After finding the correct password, which IP did the attacker use to log in to the admin panel?
+Of the two IP addresses, only one of them had a password attempt that did not come from using python. We can assume they found the password and logged in.
+
+- 40.80.148.42
+
+
+## Installation Phase
+
+Know that we know what IP and password the attacker used, we can assume they have successfully exploited the security of the system. He will try to install a backdoor or an application for persistence or to gain more control of the system.
+
+Lets look for any .exe traffic coming into our server.
+
+            index=botsv1 sourcetype=stream:http dest_ip="192.168.250.70" *.exe
+
+![image](https://github.com/user-attachments/assets/308a94fb-c644-4878-b0ee-6b19737abaff)
+
+
+We can see that the .exe came from the same IP.
+
+![image](https://github.com/user-attachments/assets/bceffa9f-52cb-4eb8-9e84-5fc306b29469)
+
+
+Lets see if this file was executed by filtering for it.
+
+![image](https://github.com/user-attachments/assets/6c2afbf2-c24a-4cac-9c03-496cabee4d34)
+
+We found some traces, lets leverage sysmon and look for EventCode=1 for evidence of execution.
+
+![image](https://github.com/user-attachments/assets/35b1aff8-e56e-4ccc-85b9-46d05afe3bd8)
+
+Looking at command line we can see it was in fact executed.
+
+
+
+#### Sysmon also collects the Hash value of the processes being created. What is the MD5 HASH of the program 3791.exe?
+Let's add the commandline with the .exe to the filter and then look inside the event.
+
+![image](https://github.com/user-attachments/assets/09c36346-cadc-44a2-aec9-a8d2e7847026)
+
+- MD5=AAE3F5A29935E6ABCC2C2754D12A9AF0
+
+#### Looking at the logs, which user executed the program 3791.exe on the server?
+We can keep the current filter and look at the user field.
+
+![image](https://github.com/user-attachments/assets/3c4691a9-4617-4148-bee6-a4e52deac67e)
+
+- IUSR
+
+#### Search hash on the virustotal. What other name is associated with this file 3791.exe?
+
+![image](https://github.com/user-attachments/assets/4f3b6348-504c-4bd5-bce9-4d180125af9d)
+
+![image](https://github.com/user-attachments/assets/f89a12dd-0690-490b-ab99-46a0b262a261)
+
+- ab.exe
+
+## Action on Objectives
+
 
 
