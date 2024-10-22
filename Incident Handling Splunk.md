@@ -1,10 +1,6 @@
-# Splunk
-This is a write up over THM's Splunk modules. The main objective is to understand and learn how to use Splunk in the real scenarios.
+# Incident Handling with Splunk
+This is a write up over THM's Splunk module. The main objective is to learn how to handle incidents with splunk.
 
-There is three parts to this write up including, "Incident Handling with Splunk", "Investigating with Splunk", and "Benign".
-
-
-## Incident Handling with Splunk
 
 There are four distinct phases in the Incident Response Life Cycle.
 
@@ -31,7 +27,7 @@ Post-Incident Activity / Leesons Learnt:
 - Improving security to prevent attack from happening again
 - Identify weakness, add detection rule, train stuff
 
-### Scenario
+## Scenario
 In this exercise an attacker has defaced an organization's website. Using Splunk as our SIEM solution, our job as a security analyst is to investigate this cyber attack and map the attacker's activitieis into all 7 of the Cyber Kill Chain Phases.
 Logs are ingested from webserver/firewall/Suricata/Sysmon etc.
 
@@ -65,7 +61,7 @@ All event logs are present in index=botsv1
 
       
 
-### Reconnaissance Phase
+## Reconnaissance Phase
 
 Start our analysis by searching for any reconnaissance attempt against our web server (imreallnotbatman.com).
 
@@ -118,7 +114,71 @@ Our web server is being scanned so we can look at the destination ip field, 192.
 ![image](https://github.com/user-attachments/assets/4b565667-dc33-4f6f-ad9e-c11712cb0c2d)
 
 
+## Exploitation Phase
+
+Look for any exploitation attempt to our web server and see if it was successful.
+
+Lets see the number of counts by each source IP against our server using this query:
+
+      index=botsv1 imreallynotbatman.com sourcetype=stream* | stats count(src_ip) as Requests by src_ip | sort - Requests
+
+![image](https://github.com/user-attachments/assets/bfbc74f0-98c7-4936-b8e4-a812aeffa5bb)
+
+This is also where we can create other forms of visualization,
+
+![image](https://github.com/user-attachments/assets/2619145e-cb38-48d1-ae96-7f83e2935f0a)
+
+Lets look at all inbound traffic towards our web server IP:
+
+      index=botsv1 sourcetype=stream:http dest_ip="192.168.250.70"
+
+![image](https://github.com/user-attachments/assets/b8a70434-595b-4f97-a0b7-08ecb7721368)
+
+We can observe that there are 2 remote IPs and 1 local IP that originated the HTTP traffic.
+
+Another interesting field we can look at is http_method which shows a lot of POST request.
+
+![image](https://github.com/user-attachments/assets/6dcf93fc-4958-4b46-809f-edbddb28f298)
 
 
+Filtering for the POST requests, we can see what IPs are sending it.
+
+![image](https://github.com/user-attachments/assets/4f540aa0-a64d-454a-a46c-c5fa5cef0d87)
+
+Other interesting fields we can look at other than src_ip is form_data, http_user_agent, and uri.
+
+One of the uri shows us the admin login page let's filter for that and look deeper.
+
+      index=botsv1 imreallynotbatman.com sourcetype=stream:http dest_ip="192.168.250.70"  uri="/joomla/administrator/index.php"
+
+form_data shows 100+ entries, we can suspect that the attacker used multiple credentials and dive deeper to confirm.
+
+![image](https://github.com/user-attachments/assets/84bda886-b14a-41bb-b64b-5421272315c2)
+
+Lets add this filter to look for important fields:
+
+      table _time uri src_ip dest_ip form_data
+
+![image](https://github.com/user-attachments/assets/6084d94d-54dd-40e9-b204-e22f9693c8a2)
+
+
+
+
+#### What was the URI which got multiple brute force attempts?
+
+
+#### Against which username was the brute force attempt made?
+
+
+#### What was the correct password for admin access to the content management system running imreallynotbatman.com?
+
+
+#### How many unique passwords were attempted in the brute force attempt?
+
+
+#### What IP address is likely attempting a brute force password attack against imreallynotbatman.com?
+
+
+#### After finding the correct password, which IP did the attacker use to log in to the admin panel?
 
 
