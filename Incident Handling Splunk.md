@@ -89,7 +89,8 @@ Questions:
 
 Using the filter we had earlier we can search for alert and look for this value.
 
-![image](https://github.com/user-attachments/assets/99fc84a4-ebd7-490d-bee5-482543b405dd)
+![image](https://github.com/user-attachments/assets/ba836bc5-b835-4c33-8dbb-37da16d29d20)
+
 
 
 #### What is the CMS our web server is using?
@@ -257,7 +258,7 @@ Let's add the commandline with the .exe to the filter and then look inside the e
 #### Looking at the logs, which user executed the program 3791.exe on the server?
 We can keep the current filter and look at the user field.
 
-![image](https://github.com/user-attachments/assets/3c4691a9-4617-4148-bee6-a4e52deac67e)
+![image](https://github.com/user-attachments/assets/66d9af69-eb6f-4390-81d3-bd8f2a0f09a6)
 
 - IUSR
 
