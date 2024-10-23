@@ -271,6 +271,152 @@ We can keep the current filter and look at the user field.
 - ab.exe
 
 ## Action on Objectives
+Since our site was successfully attacked, we should see what ended up on the site that caused defacement.
+
+Lets figure out the traffic flow that and look through the suricata logs.
+
+      Search Query:index=botsv1 src=192.168.250.70 sourcetype=suricata
+
+![image](https://github.com/user-attachments/assets/6bf0fb16-3c0c-4d93-b0ed-793e5c4b2ce8)
+
+Web servers typically do not originate traffic since the browser or client would be the source and the server would be the destination.
+
+Lets look into this traffic an observe this abnormalitiy.
+
+![image](https://github.com/user-attachments/assets/272a9d5a-b073-486f-893f-764ace8b9fdf)
+
+The second IP shows two .php files and .jpeg file. Lets look where this jpeg came from and adjust the filter.
+
+![image](https://github.com/user-attachments/assets/e28405d3-8d2f-47b3-ba68-a4a3204f5cdb)
+
+Looks like the jpeg was downloaded from the attacker's host.
+
+#### What is the name of the file that defaced the imreallynotbatman.com website ?
+We found this earlier,
+- poisonivy-is-coming-for-you-batman.jpeg
+
+
+#### Fortigate Firewall 'fortigate_utm' detected SQL attempt from the attacker's IP 40.80.148.42. What is the name of the rule that was triggered during the SQL Injection attempt?
+
+Filtering for this we can lookout for SQL in the attack field.
+
+![image](https://github.com/user-attachments/assets/d6916c3a-d52a-4bae-8341-f38a6c278ae2)
+
+- HTTP.URI.SQL.Injection
+
+
+## Command and Control Phase
+
+"The attacker uploaded the file to the server before defacing it. While doing so, the attacker used a Dynamic DNS to resolve a malicious IP. Our objective would be to find the IP that the attacker decided the DNS.
+
+To investigate the communication to and from the adversary's IP addresses, we will be examining the network-centric log sources mentioned above. We will first pick fortigate_utm to review the firewall logs and then move on to the other log sources."
+
+Lets adjust the filter to fortigate and look for the jpeg.
+
+![image](https://github.com/user-attachments/assets/7d70a2d2-0f86-4930-bfec-00cc5dad0138)
+
+![image](https://github.com/user-attachments/assets/4a8c48eb-c683-4b45-b580-494f26a56387)
+
+We got the IP and even the FQDN.
+
+- 192.168.250.70
+
+#### This attack used dynamic DNS to resolve to the malicious IP. What fully qualified domain name (FQDN) is associated with this attack?
+
+Our last image showed this.
+- prankglassinebracket.jumpingcrab.com
+
+## Weaponization Phase
+In this phase attackers would
+- Create malware or malicious documents to gain intial access or evade detection
+- Establish domains similar to the target domain to trick users
+- Create C2 server for post-exploitation communication or activity
+
+We found some ip addresses and domains so lets try looking into OSINT sites to gather more info.
+
+Lets use Robtex, a threat intel site, to search for the domain and IP:
+
+![image](https://github.com/user-attachments/assets/75bb7e99-d5c0-4f33-9d5e-a849798240b9)
+
+![image](https://github.com/user-attachments/assets/893583c6-b996-426a-8596-47e3b5c8bb1a)
+
+![image](https://github.com/user-attachments/assets/c1230fab-6ed0-4866-8232-d981b44ab279)
+
+Lets also use VirusTotal:
+
+![image](https://github.com/user-attachments/assets/0be38e62-0c62-4471-978d-b682f3caab5c)
+
+In the domains poisonivy looks relevant lets look.
+
+![image](https://github.com/user-attachments/assets/45a74db5-c438-4da4-8d2a-06d2e4b407a0)
+
+
+We can also look at whois for more info:
+
+
+
+#### What IP address has P01s0n1vy tied to domains that are pre-staged to attack Wayne Enterprises?
+
+From our robtex site:
+
+![image](https://github.com/user-attachments/assets/bb03b557-52dd-42ad-a898-95573fb3eaab)
+
+- 23.22.63.114
+
+
+#### Based on the data gathered from this attack and common open-source intelligence sources for domain names, what is the email address that is most likely associated with the P01s0n1vy APT group?
+
+Hint tell us to use otx.alienvault:
+
+![image](https://github.com/user-attachments/assets/ba8c24dc-4d14-4e7c-bc9a-372595a839c1)
+
+- lillian.rose @po1s0nvy.com
+
+
+## Delivery Phase
+
+"Attackers create malware and infect devices to gain initial access or evade defenses and find ways to deliver it through different means. We have identified various IP addresses, domains and Email addresses associated with this adversary. Our task for this lesson would be to use the information we have about the adversary and use various Threat Hunting platforms and OSINT sites to find any malware linked with the adversary.
+
+Threat Intel report suggested that this adversary group Poison lvy appears to have a secondary attack vector in case the initial compromise fails. Our objective would be to understand more about the attacker and their methodology and correlate the information found in the logs with various threat Intel sources."
+
+OSINT sites
+
+    Virustotal
+    ThreatMiner
+    Hybrid-Analysis
+
+I enjoy using Virustotal so lets dig for some information:
+
+![image](https://github.com/user-attachments/assets/7f471934-f567-4eda-b2de-fc13662c8a48)
+
+Looking at this exe we can see that our IP address is under the contacted relations as well.
+
+![image](https://github.com/user-attachments/assets/f13f8d01-1184-4bfb-a16b-ef11ab2745aa)
+
+
+
+
+#### What is the HASH of the Malware associated with the APT group?
+Assuming this screensaver is the malware from our last image.
+
+![image](https://github.com/user-attachments/assets/03fef1b6-d5ed-43ca-b144-168a5b4af4dd)
+
+-  c99131e0169171935c5ac32615ed6261 
+
+#### What is the name of the Malware associated with the Poison Ivy Infrastructure?
+
+Again analysis tells us that it should be,
+
+- MirandaTateScreensaver.scr.exe
+
+
+
+
+
+
+
+
+
 
 
 
