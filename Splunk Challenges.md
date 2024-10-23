@@ -203,6 +203,6 @@ Found this earlier when viewing the cmd.
 - https://controlc.com/e4d11035
 
 
-## Conclusion
+## Closing Notes
 
 This was a great challenge and a really fun way to learn Splunk more. 
